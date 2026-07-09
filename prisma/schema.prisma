@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  password      String?
+  contact       String?
+  image         String?
+  role          String    @default("CUSTOMER") // CUSTOMER, ADMIN, STORE_MANAGER, SALES_EXECUTIVE, TECHNICIAN, INVENTORY_MANAGER
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts       Account[]
+  sessions       Session[]
+  orders         Order[]
+  repairs        Repair[]  @relation("CustomerRepairs")
+  handledRepairs Repair[]  @relation("TechnicianRepairs")
+  addresses      Address[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  brandId     String?
+  brand       Brand?     @relation(fields: [brandId], references: [id])
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Brand {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  logo      String?
+  categories Category[]
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  type        String      @default("MOBILE") // MOBILE, TABLET, ACCESSORY, SPARE_PART
+  basePrice   Float
+  images      String?
+  categoryId  String
+  brandId     String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  category Category         @relation(fields: [categoryId], references: [id])
+  brand    Brand            @relation(fields: [brandId], references: [id])
+  variants ProductVariant[]
+}
+
+model ProductVariant {
+  id         String   @id @default(cuid())
+  productId  String
+  sku        String   @unique
+  name       String   // e.g., "8GB RAM / 128GB Storage - Black"
+  price      Float
+  stock      Int      @default(0)
+  attributes String?  // Stringified JSON
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+}
+
+model Repair {
+  id             String       @id @default(cuid())
+  customerId     String
+  technicianId   String?
+  deviceBrand    String
+  deviceModel    String
+  imei           String?
+  issue          String
+  description    String?
+  estimatedCost  Float?
+  finalCost      Float?
+  status         String       @default("BOOKED") // BOOKED, RECEIVED, DIAGNOSING, WAITING_APPROVAL, REPAIRING, QUALITY_CHECK, COMPLETED, DELIVERED, CANCELLED
+  photos         String?
+  pickupRequired Boolean      @default(false)
+  preferredDate  DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  customer   User              @relation("CustomerRepairs", fields: [customerId], references: [id])
+  technician User?             @relation("TechnicianRepairs", fields: [technicianId], references: [id])
+  statusLogs RepairStatusLog[]
+}
+
+model RepairStatusLog {
+  id        String       @id @default(cuid())
+  repairId  String
+  status    String
+  note      String?
+  createdAt DateTime     @default(now())
+
+  repair Repair @relation(fields: [repairId], references: [id], onDelete: Cascade)
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  userId     String
+  fullAddress String
+  country    String   @default("India")
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders Order[]
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  userId        String
+  addressId     String?
+  totalAmount   Float
+  status        String      @default("PENDING") // PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED, RETURNED
+  paymentMethod String      // e.g., RAZORPAY, UPI, COD, CASH
+  paymentStatus String      // e.g., PENDING, COMPLETED, FAILED
+  transactionId String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  user    User        @relation(fields: [userId], references: [id])
+  address Address?    @relation(fields: [addressId], references: [id])
+  items   OrderItem[]
+}
+
+model OrderItem {
+  id               String   @id @default(cuid())
+  orderId          String
+  productVariantId String
+  quantity         Int
+  price            Float
+  createdAt        DateTime @default(now())
+
+  order          Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productVariant ProductVariant @relation(fields: [productVariantId], references: [id])
+}
