@@ -24,10 +24,17 @@ export async function getRepairJobs() {
   }))
 }
 
-export async function getRepairJobById(id: string) {
-  const job = await prisma.repair.findUnique({
-    where: { id },
-    include: { customer: true, statusLogs: true }
+export async function getRepairJobById(input: string) {
+  const job = await prisma.repair.findFirst({
+    where: { 
+      OR: [
+        { id: input },
+        { customer: { contact: input } },
+        { customer: { name: { contains: input } } } // Allow fuzzy search by name
+      ]
+    },
+    include: { customer: true, statusLogs: true },
+    orderBy: { createdAt: 'desc' }
   })
   
   if (!job) return null
@@ -37,6 +44,7 @@ export async function getRepairJobById(id: string) {
     device: `${job.deviceBrand} ${job.deviceModel}`,
     issue: job.issue,
     customer: job.customer.name || "Unknown",
+    customerPhone: job.customer.contact || "-",
     date: job.createdAt.toLocaleDateString(),
     status: job.status.toLowerCase(),
     serviceType: job.pickupRequired ? "Pickup & Drop" : "Store Visit",

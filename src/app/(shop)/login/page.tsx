@@ -6,6 +6,7 @@ import Link from "next/link"
 import { Lock, Mail, User, Phone, MapPin } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { loginAction, registerAction } from "@/actions/auth"
 
@@ -80,10 +81,9 @@ export default function CustomerLoginPage() {
                   <label className="text-sm font-medium">Password</label>
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input 
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
+                  <PasswordInput 
                     name="password"
-                    type="password" 
                     className="pl-10" 
                     required 
                   />
@@ -93,6 +93,12 @@ export default function CustomerLoginPage() {
               {loginError && <p className="text-sm text-destructive font-medium text-center">{loginError}</p>}
 
               <LoginSubmitButton />
+              
+              <div className="text-center mt-4">
+                <Link href="/forgot-password" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  Forgot your password?
+                </Link>
+              </div>
             </form>
           </TabsContent>
 
@@ -125,19 +131,14 @@ export default function CustomerLoginPage() {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input 
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
+                  <PasswordInput 
                     name="password"
-                    type="password" 
                     className="pl-10" 
                     required 
                     minLength={6}
                   />
                 </div>
-              </div>
-
-              <div className="space-y-2 pt-2 border-t border-border/50">
-                <h4 className="font-medium text-sm">Contact & Address</h4>
               </div>
 
               <div className="space-y-2">

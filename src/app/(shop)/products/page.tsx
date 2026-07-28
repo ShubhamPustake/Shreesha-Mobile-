@@ -1,5 +1,9 @@
+"use client"
+
+import { useState, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
-import { Filter, ChevronDown } from "lucide-react"
+import { Filter, ChevronDown, RefreshCcw } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -21,7 +25,53 @@ const PRODUCTS = [
   { id: "6", name: "Nothing Phone (2)", price: 44999, category: "Mobiles", brand: "Nothing", stock: 5, image: "https://images.unsplash.com/photo-1691440263529-65b7d6006f0e?q=80&w=600&auto=format&fit=crop" },
 ]
 
-export default function ProductsPage() {
+const ALL_CATEGORIES = ["Mobiles", "Accessories", "Spare Parts"]
+const ALL_BRANDS = ["Apple", "Samsung", "OnePlus", "Sony", "Nothing"]
+const PRICE_RANGES = ["Under ₹10,000", "₹10,000 - ₹30,000", "₹30,000 - ₹60,000", "Over ₹60,000"]
+
+function ProductsContent() {
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
+  const [selectedPrice, setSelectedPrice] = useState<string | null>(null)
+
+  const toggleCategory = (cat: string) => {
+    setSelectedCategories(prev => 
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    )
+  }
+
+  const toggleBrand = (brand: string) => {
+    setSelectedBrands(prev => 
+      prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]
+    )
+  }
+
+  const clearFilters = () => {
+    setSelectedCategories([])
+    setSelectedBrands([])
+    setSelectedPrice(null)
+  }
+
+  const searchParams = useSearchParams()
+  const searchQuery = searchParams.get('search')?.toLowerCase() || ''
+
+  const filteredProducts = PRODUCTS.filter(p => {
+    if (selectedCategories.length > 0 && !selectedCategories.includes(p.category)) return false
+    if (selectedBrands.length > 0 && !selectedBrands.includes(p.brand)) return false
+    if (selectedPrice) {
+      if (selectedPrice === "Under ₹10,000" && p.price >= 10000) return false
+      if (selectedPrice === "₹10,000 - ₹30,000" && (p.price < 10000 || p.price > 30000)) return false
+      if (selectedPrice === "₹30,000 - ₹60,000" && (p.price < 30000 || p.price > 60000)) return false
+      if (selectedPrice === "Over ₹60,000" && p.price <= 60000) return false
+    }
+    if (searchQuery) {
+      if (!p.name.toLowerCase().includes(searchQuery) && !p.brand.toLowerCase().includes(searchQuery)) return false
+    }
+    return true
+  })
+
+  const hasFilters = selectedCategories.length > 0 || selectedBrands.length > 0 || selectedPrice !== null || searchQuery !== '';
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Breadcrumbs & Header */}
@@ -34,19 +84,36 @@ export default function ProductsPage() {
         {/* Sidebar Filters */}
         <aside className="w-full lg:w-64 flex-shrink-0">
           <div className="sticky top-24 glass-panel p-5 rounded-xl border-border/50">
-            <div className="flex items-center gap-2 font-semibold text-lg mb-4">
-              <Filter className="h-5 w-5" /> Filters
+            <div className="flex items-center justify-between font-semibold text-lg mb-4">
+              <div className="flex items-center gap-2">
+                <Filter className="h-5 w-5" /> Filters
+              </div>
+              {hasFilters && (
+                <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 px-2 text-xs text-primary hover:text-primary/80">
+                  <RefreshCcw className="h-3 w-3 mr-1" /> Clear
+                </Button>
+              )}
             </div>
             <Separator className="mb-4" />
             
-            <Accordion className="w-full">
+            <Accordion type="multiple" defaultValue={["categories", "brands", "price"]} className="w-full">
               <AccordionItem value="categories" className="border-b-0">
                 <AccordionTrigger className="hover:no-underline py-3">Categories</AccordionTrigger>
                 <AccordionContent>
                   <ul className="space-y-2">
-                    <li><label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" className="rounded border-input text-primary focus:ring-primary" defaultChecked /> Mobiles</label></li>
-                    <li><label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" className="rounded border-input text-primary focus:ring-primary" defaultChecked /> Accessories</label></li>
-                    <li><label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" className="rounded border-input text-primary focus:ring-primary" /> Spare Parts</label></li>
+                    {ALL_CATEGORIES.map(cat => (
+                      <li key={cat}>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input 
+                            type="checkbox" 
+                            className="rounded border-input text-primary focus:ring-primary w-4 h-4" 
+                            checked={selectedCategories.includes(cat)}
+                            onChange={() => toggleCategory(cat)}
+                          /> 
+                          {cat}
+                        </label>
+                      </li>
+                    ))}
                   </ul>
                 </AccordionContent>
               </AccordionItem>
@@ -55,10 +122,19 @@ export default function ProductsPage() {
                 <AccordionTrigger className="hover:no-underline py-3">Brands</AccordionTrigger>
                 <AccordionContent>
                   <ul className="space-y-2">
-                    <li><label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" className="rounded border-input text-primary focus:ring-primary" /> Apple</label></li>
-                    <li><label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" className="rounded border-input text-primary focus:ring-primary" /> Samsung</label></li>
-                    <li><label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" className="rounded border-input text-primary focus:ring-primary" /> OnePlus</label></li>
-                    <li><label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" className="rounded border-input text-primary focus:ring-primary" /> Sony</label></li>
+                    {ALL_BRANDS.map(brand => (
+                      <li key={brand}>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input 
+                            type="checkbox" 
+                            className="rounded border-input text-primary focus:ring-primary w-4 h-4" 
+                            checked={selectedBrands.includes(brand)}
+                            onChange={() => toggleBrand(brand)}
+                          /> 
+                          {brand}
+                        </label>
+                      </li>
+                    ))}
                   </ul>
                 </AccordionContent>
               </AccordionItem>
@@ -67,10 +143,20 @@ export default function ProductsPage() {
                 <AccordionTrigger className="hover:no-underline py-3">Price Range</AccordionTrigger>
                 <AccordionContent>
                   <ul className="space-y-2">
-                    <li><label className="flex items-center gap-2 cursor-pointer"><input type="radio" name="price" className="text-primary focus:ring-primary" /> Under ₹10,000</label></li>
-                    <li><label className="flex items-center gap-2 cursor-pointer"><input type="radio" name="price" className="text-primary focus:ring-primary" /> ₹10,000 - ₹30,000</label></li>
-                    <li><label className="flex items-center gap-2 cursor-pointer"><input type="radio" name="price" className="text-primary focus:ring-primary" /> ₹30,000 - ₹60,000</label></li>
-                    <li><label className="flex items-center gap-2 cursor-pointer"><input type="radio" name="price" className="text-primary focus:ring-primary" /> Over ₹60,000</label></li>
+                    {PRICE_RANGES.map(range => (
+                      <li key={range}>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input 
+                            type="radio" 
+                            name="priceRange" 
+                            className="text-primary focus:ring-primary w-4 h-4" 
+                            checked={selectedPrice === range}
+                            onChange={() => setSelectedPrice(range)}
+                          /> 
+                          {range}
+                        </label>
+                      </li>
+                    ))}
                   </ul>
                 </AccordionContent>
               </AccordionItem>
@@ -81,46 +167,64 @@ export default function ProductsPage() {
         {/* Product Grid */}
         <div className="flex-1">
           <div className="flex justify-between items-center mb-6">
-            <span className="text-sm text-muted-foreground">Showing {PRODUCTS.length} products</span>
+            <span className="text-sm text-muted-foreground">Showing {filteredProducts.length} products</span>
             <Button variant="outline" size="sm" className="gap-2">
               Sort by: Featured <ChevronDown className="h-4 w-4" />
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-            {PRODUCTS.map((product) => (
-              <Card key={product.id} className="overflow-hidden border-border/50 group h-full flex flex-col">
-                <Link href={`/products/${product.id}`} className="block relative aspect-square bg-muted overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img 
-                    src={product.image} 
-                    alt={product.name}
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-                  />
-                  {product.stock < 10 && (
-                    <Badge variant="destructive" className="absolute top-3 left-3">Only {product.stock} left</Badge>
-                  )}
-                </Link>
-                <CardContent className="p-5 flex-1 flex flex-col">
-                  <div className="flex justify-between items-start mb-2">
-                    <p className="text-xs font-medium text-primary uppercase tracking-wider">{product.brand}</p>
-                    <p className="text-xs text-muted-foreground">{product.category}</p>
-                  </div>
-                  <Link href={`/products/${product.id}`}>
-                    <h3 className="font-semibold text-lg mb-4 hover:text-primary transition-colors line-clamp-2">{product.name}</h3>
+          {filteredProducts.length === 0 ? (
+            <div className="bg-white/50 backdrop-blur-sm p-12 text-center rounded-xl border border-border/50 shadow-sm">
+              <h3 className="text-xl font-semibold mb-2">No results found</h3>
+              <p className="text-muted-foreground">Try removing some filters to see more products.</p>
+              <Button variant="outline" className="mt-4" onClick={clearFilters}>
+                Clear all filters
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              {filteredProducts.map((product) => (
+                <Card key={product.id} className="overflow-hidden border-border/50 group h-full flex flex-col">
+                  <Link href={`/products/${product.id}`} className="block relative aspect-square bg-muted overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img 
+                      src={product.image} 
+                      alt={product.name}
+                      className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {product.stock < 10 && (
+                      <Badge variant="destructive" className="absolute top-3 left-3">Only {product.stock} left</Badge>
+                    )}
                   </Link>
-                  <div className="mt-auto flex flex-wrap items-center justify-between gap-3">
-                    <span className="font-bold text-xl">₹{product.price.toLocaleString()}</span>
-                    <Link href={`/products/${product.id}`} className={buttonVariants({ variant: "secondary" })}>
-                      Details
+                  <CardContent className="p-5 flex-1 flex flex-col">
+                    <div className="flex justify-between items-start mb-2">
+                      <p className="text-xs font-medium text-primary uppercase tracking-wider">{product.brand}</p>
+                      <p className="text-xs text-muted-foreground">{product.category}</p>
+                    </div>
+                    <Link href={`/products/${product.id}`}>
+                      <h3 className="font-semibold text-lg mb-4 hover:text-primary transition-colors line-clamp-2">{product.name}</h3>
                     </Link>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    <div className="mt-auto flex flex-wrap items-center justify-between gap-3">
+                      <span className="font-bold text-xl">₹{product.price.toLocaleString()}</span>
+                      <Link href={`/products/${product.id}`} className={buttonVariants({ variant: "secondary" })}>
+                        Details
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
+  )
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div className="container mx-auto px-4 py-20 text-center">Loading products...</div>}>
+      <ProductsContent />
+    </Suspense>
   )
 }

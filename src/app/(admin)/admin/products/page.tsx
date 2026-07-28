@@ -7,6 +7,11 @@ const prisma = new PrismaClient()
 
 export default async function ProductsPage() {
   const products = await prisma.product.findMany({
+    where: {
+      type: {
+        not: "SPARE_PART"
+      }
+    },
     orderBy: { createdAt: 'desc' },
     include: {
       category: true,
@@ -22,9 +27,6 @@ export default async function ProductsPage() {
   const totalProducts = products.length
   const totalCategories = categories.length
   const totalBrands = brands.length
-  const avgPrice = totalProducts > 0 
-    ? products.reduce((sum, p) => sum + p.basePrice, 0) / totalProducts 
-    : 0
 
   return (
     <div className="p-6 space-y-6">
@@ -37,7 +39,7 @@ export default async function ProductsPage() {
       </div>
 
       {/* Top Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <Card className="glass-panel" size="sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Products</CardTitle>
@@ -65,16 +67,6 @@ export default async function ProductsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalBrands}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="glass-panel" size="sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Avg Base Price</CardTitle>
-            <IndianRupee className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">₹{Math.round(avgPrice).toLocaleString('en-IN')}</div>
           </CardContent>
         </Card>
       </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, Plus, UserPlus, Mail, Phone, MapPin } from "lucide-react"
+import { Search, Plus, UserPlus, Mail, Phone, MapPin, Edit, Trash2 } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -12,10 +12,9 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { getCustomers, addCustomer } from "@/actions/customers"
+import { getCustomers, addCustomer, updateCustomer, deleteCustomer } from "@/actions/customers"
 
 export default function CustomersPage() {
   const [search, setSearch] = useState("")
@@ -23,6 +22,7 @@ export default function CustomersPage() {
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [editingCustomerId, setEditingCustomerId] = useState<string | null>(null)
 
   // Form State
   const [formData, setFormData] = useState({
@@ -55,21 +55,57 @@ export default function CustomersPage() {
     c.contact.includes(search)
   )
 
+  const openAddModal = () => {
+    setEditingCustomerId(null)
+    setFormData({ name: "", email: "", contact: "", fullAddress: "" })
+    setIsModalOpen(true)
+  }
+
+  const openEditModal = (customer: any) => {
+    setEditingCustomerId(customer.id)
+    setFormData({
+      name: customer.name,
+      email: customer.email,
+      contact: customer.contact,
+      fullAddress: customer.address !== "No Address" ? customer.address : ""
+    })
+    setIsModalOpen(true)
+  }
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this customer?")) return
+    try {
+      const res = await deleteCustomer(id)
+      if (res.error) {
+        toast.error(res.error)
+      } else {
+        toast.success("Customer deleted successfully")
+        loadCustomers()
+      }
+    } catch (err) {
+      toast.error("Failed to delete customer")
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    
     try {
-      const res = await addCustomer(formData)
-      if (res.success) {
-        toast.success("Customer added successfully")
-        setIsModalOpen(false)
-        setFormData({ name: "", email: "", contact: "", fullAddress: "" })
-        await loadCustomers()
+      const res = editingCustomerId 
+        ? await updateCustomer(editingCustomerId, formData)
+        : await addCustomer(formData)
+
+      if (res.error) {
+        toast.error(res.error)
       } else {
-        toast.error(res.error || "Failed to add customer")
+        toast.success(editingCustomerId ? "Customer updated successfully!" : "Customer added successfully!")
+        setIsModalOpen(false)
+        loadCustomers()
+        setFormData({ name: "", email: "", contact: "", fullAddress: "" })
       }
-    } catch (err) {
-      toast.error("Something went wrong")
+    } catch (error) {
+      toast.error("An error occurred")
     } finally {
       setIsSubmitting(false)
     }
@@ -84,14 +120,14 @@ export default function CustomersPage() {
         </div>
         
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-          <DialogTrigger className={buttonVariants({ variant: "default", className: "gap-2" })}>
-            <UserPlus className="h-4 w-4" /> New Customer
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px] glass-panel">
+          <Button onClick={openAddModal} className="flex items-center gap-2">
+            <Plus className="w-4 h-4" /> Add Customer
+          </Button>
+          <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Add New Customer</DialogTitle>
+              <DialogTitle>{editingCustomerId ? "Edit Customer" : "Add New Customer"}</DialogTitle>
               <DialogDescription>
-                Manually register a customer. They will receive an email to set their password.
+                {editingCustomerId ? "Update the details for this customer below." : "Enter the details for the new customer. A default account will be created."}
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 py-4">
@@ -119,7 +155,7 @@ export default function CustomersPage() {
               <div className="pt-4 flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Adding..." : "Save Customer"}
+                  {isSubmitting ? "Saving..." : "Save Customer"}
                 </Button>
               </div>
             </form>
@@ -148,35 +184,55 @@ export default function CustomersPage() {
           ) : (
             <div className="w-full">
               <table className="w-full text-sm text-left">
-                <thead className="text-xs text-muted-foreground uppercase bg-muted/30 sticky top-0 backdrop-blur-md">
+                <thead className="text-xs text-muted-foreground uppercase bg-muted/50 border-b border-border/50">
                   <tr>
-                    <th className="px-6 py-4 font-medium">Customer Name</th>
-                    <th className="px-6 py-4 font-medium">Contact Details</th>
-                    <th className="px-6 py-4 font-medium hidden md:table-cell">Primary Address</th>
-                    <th className="px-6 py-4 font-medium hidden sm:table-cell">Registered</th>
+                    <th className="px-4 py-3 font-medium">Customer Details</th>
+                    <th className="px-4 py-3 font-medium">Contact Info</th>
+                    <th className="px-4 py-3 font-medium">Joined</th>
+                    <th className="px-4 py-3 font-medium text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/50">
                   {filteredCustomers.map((customer) => (
-                    <tr key={customer.id} className="hover:bg-muted/30 transition-colors group">
-                      <td className="px-6 py-4 font-medium text-foreground">
-                        {customer.name}
-                      </td>
-                      <td className="px-6 py-4 space-y-1">
-                        <div className="flex items-center text-muted-foreground group-hover:text-foreground transition-colors">
-                          <Phone className="h-3 w-3 mr-2" /> {customer.contact}
-                        </div>
-                        <div className="flex items-center text-muted-foreground">
-                          <Mail className="h-3 w-3 mr-2" /> {customer.email}
+                    <tr key={customer.id} className="hover:bg-muted/20 transition-colors">
+                      <td className="px-4 py-3">
+                        <div className="font-medium text-foreground">{customer.name}</div>
+                        <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1 truncate max-w-[200px]">
+                          <MapPin className="w-3 h-3" /> {customer.address}
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-muted-foreground hidden md:table-cell">
-                        <div className="flex items-center">
-                          <MapPin className="h-3 w-3 mr-2 shrink-0" /> {customer.address}
+                      <td className="px-4 py-3">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <Mail className="w-3.5 h-3.5" /> {customer.email}
+                          </div>
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <Phone className="w-3.5 h-3.5" /> {customer.contact}
+                          </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-muted-foreground hidden sm:table-cell">
+                      <td className="px-4 py-3 text-muted-foreground">
                         {new Date(customer.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-8 w-8"
+                            onClick={() => openEditModal(customer)}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button 
+                            variant="destructive" 
+                            size="icon" 
+                            className="h-8 w-8"
+                            onClick={() => handleDelete(customer.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ))}

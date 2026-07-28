@@ -23,7 +23,7 @@ function TrackRepairContent() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (!trackingId.trim()) {
-      setError("Please enter a valid Tracking ID or Phone Number")
+      setError("Please enter a valid Name or Phone Number")
       return
     }
 
@@ -39,7 +39,7 @@ function TrackRepairContent() {
           device: job.device,
           issue: job.issue,
           customerName: job.customer,
-          phone: "-", // Could fetch from customer
+          phone: job.customerPhone,
           serviceType: job.serviceType,
           estimateAmount: 1500, // Mocked for now
           expectedCompletion: "In 2 days", // Mocked
@@ -61,7 +61,7 @@ function TrackRepairContent() {
     <div className="container mx-auto px-4 py-12 max-w-5xl">
       <div className="text-center mb-10">
         <h1 className="text-4xl font-bold tracking-tight mb-4">Track Your Repair</h1>
-        <p className="text-lg text-muted-foreground">Enter your Job ID or registered phone number to check live status.</p>
+        <p className="text-lg text-muted-foreground">Enter your name or registered phone number to check live status.</p>
       </div>
 
       {/* Search Bar */}
@@ -71,7 +71,6 @@ function TrackRepairContent() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
               <Input 
-                placeholder="e.g. SRX-8924 or 9876543210" 
                 className="pl-10 h-12 text-lg"
                 value={trackingId}
                 onChange={(e) => setTrackingId(e.target.value)}

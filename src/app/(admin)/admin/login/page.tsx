@@ -6,6 +6,7 @@ import Link from "next/link"
 import { Lock, Mail, ShieldAlert } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
 import { loginAction } from "@/actions/auth"
 
 function SubmitButton() {
@@ -60,10 +61,9 @@ export default function AdminLoginPage() {
           <div className="space-y-2">
             <label className="text-sm font-semibold text-slate-700">Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-              <Input 
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400 z-10" />
+              <PasswordInput 
                 name="password"
-                type="password" 
                 placeholder="••••••••" 
                 className="pl-10 bg-slate-50 border-slate-200" 
                 required 

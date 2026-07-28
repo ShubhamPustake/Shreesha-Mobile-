@@ -19,7 +19,8 @@ import {
   LineChart,
   Ticket,
   Layers,
-  Tags
+  Tags,
+  MessageSquare
 } from "lucide-react"
 import { logoutAction } from "@/actions/auth"
 
@@ -46,6 +47,7 @@ export function AdminSidebar() {
     { name: "Finance", href: "/admin/finance", icon: Landmark },
     { name: "Reports & Analytics", href: "/admin/reports", icon: LineChart },
     { name: "Coupons", href: "/admin/coupons", icon: Ticket },
+    { name: "Feedback", href: "/admin/feedback", icon: MessageSquare },
     { name: "Settings", href: "/admin/settings", icon: Settings },
   ]
 

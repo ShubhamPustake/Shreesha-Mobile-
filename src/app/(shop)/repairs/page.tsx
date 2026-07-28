@@ -19,17 +19,17 @@ const repairSchema = z.object({
   issue: z.string().min(10, "Please describe the issue in at least 10 characters"),
   imei: z.string().optional(),
   passcode: z.string().optional(),
-  serviceType: z.enum(["store", "pickup", "doorstep"]),
+  serviceType: z.enum(["store", "pickup"]),
   fullName: z.string().min(2, "Full name is required"),
   phone: z.string().min(10, "Valid phone number required"),
   email: z.string().email("Invalid email address"),
   address: z.string().optional(),
   preferredDate: z.string().min(1, "Preferred date is required"),
 }).superRefine((data, ctx) => {
-  if ((data.serviceType === "pickup" || data.serviceType === "doorstep") && (!data.address || data.address.length < 5)) {
+  if (data.serviceType === "pickup" && (!data.address || data.address.length < 5)) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Address is required for Pickup or Doorstep service",
+      message: "Address is required for Pickup service",
       path: ["address"],
     });
   }
@@ -82,18 +82,33 @@ export default function RepairBookingPage() {
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-medium">Brand *</label>
-              <Input placeholder="e.g., Apple, Samsung, OnePlus" {...register("brand")} />
+              <select 
+                {...register("brand")} 
+                className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-base shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              >
+                <option value="">Select a brand</option>
+                <option value="Apple">Apple</option>
+                <option value="Samsung">Samsung</option>
+                <option value="OnePlus">OnePlus</option>
+                <option value="Xiaomi">Xiaomi / Poco / Redmi</option>
+                <option value="Vivo">Vivo / iQOO</option>
+                <option value="Oppo">Oppo</option>
+                <option value="Realme">Realme</option>
+                <option value="Google">Google Pixel</option>
+                <option value="Nothing">Nothing</option>
+                <option value="Motorola">Motorola</option>
+                <option value="Other">Other Brand</option>
+              </select>
               {errors.brand && <p className="text-destructive text-xs">{errors.brand.message}</p>}
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Model *</label>
-              <Input placeholder="e.g., iPhone 13 Pro, Galaxy S22" {...register("model")} />
+              <Input {...register("model")} />
               {errors.model && <p className="text-destructive text-xs">{errors.model.message}</p>}
             </div>
             <div className="space-y-2 md:col-span-2">
               <label className="text-sm font-medium">Describe the Issue *</label>
               <Textarea 
-                placeholder="Screen broken, battery draining fast, device not turning on..." 
                 className="min-h-[100px]"
                 {...register("issue")} 
               />
@@ -101,11 +116,11 @@ export default function RepairBookingPage() {
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">IMEI Number (Optional)</label>
-              <Input placeholder="15 digit IMEI" {...register("imei")} />
+              <Input {...register("imei")} />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Device Passcode (Optional)</label>
-              <Input placeholder="Required for testing after repair" {...register("passcode")} type="password" />
+              <Input {...register("passcode")} type="password" />
               <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
                 <ShieldCheck className="h-3 w-3" /> Encrypted & secure
               </p>
@@ -120,7 +135,7 @@ export default function RepairBookingPage() {
             <CardDescription>How would you like to get your device serviced?</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <label className={`cursor-pointer rounded-xl border-2 p-4 flex flex-col items-center text-center gap-3 transition-all ${serviceType === 'store' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}>
                 <input type="radio" value="store" className="sr-only" {...register("serviceType")} />
                 <Store className={`h-8 w-8 ${serviceType === 'store' ? 'text-primary' : 'text-muted-foreground'}`} />
@@ -138,15 +153,6 @@ export default function RepairBookingPage() {
                   <p className="text-xs text-muted-foreground mt-1">We collect, repair, and deliver (+₹150)</p>
                 </div>
               </label>
-
-              <label className={`cursor-pointer rounded-xl border-2 p-4 flex flex-col items-center text-center gap-3 transition-all ${serviceType === 'doorstep' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'}`}>
-                <input type="radio" value="doorstep" className="sr-only" {...register("serviceType")} />
-                <Wrench className={`h-8 w-8 ${serviceType === 'doorstep' ? 'text-primary' : 'text-muted-foreground'}`} />
-                <div>
-                  <h4 className="font-semibold">Doorstep Repair</h4>
-                  <p className="text-xs text-muted-foreground mt-1">Technician comes to you (+₹300)</p>
-                </div>
-              </label>
             </div>
           </CardContent>
         </Card>
@@ -159,17 +165,17 @@ export default function RepairBookingPage() {
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-sm font-medium">Full Name *</label>
-              <Input placeholder="John Doe" {...register("fullName")} />
+              <Input {...register("fullName")} />
               {errors.fullName && <p className="text-destructive text-xs">{errors.fullName.message}</p>}
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Phone Number *</label>
-              <Input placeholder="+91 98765 43210" {...register("phone")} />
+              <Input {...register("phone")} />
               {errors.phone && <p className="text-destructive text-xs">{errors.phone.message}</p>}
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Email Address *</label>
-              <Input placeholder="john@example.com" type="email" {...register("email")} />
+              <Input type="email" {...register("email")} />
               {errors.email && <p className="text-destructive text-xs">{errors.email.message}</p>}
             </div>
             <div className="space-y-2">
@@ -186,7 +192,6 @@ export default function RepairBookingPage() {
                 <Separator className="my-2" />
                 <label className="text-sm font-medium">Full Address *</label>
                 <Textarea 
-                  placeholder="Street address, City, Landmark, Pincode" 
                   className="min-h-[80px]"
                   {...register("address")} 
                 />

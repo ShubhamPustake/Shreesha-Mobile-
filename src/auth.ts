@@ -1,10 +1,13 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { PrismaClient } from "@prisma/client"
+import bcrypt from "bcryptjs"
 
 const prisma = new PrismaClient()
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.AUTH_SECRET,
+  trustHost: true,
   providers: [
     Credentials({
       credentials: {
@@ -18,7 +21,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           where: { email: credentials.email as string }
         })
 
-        if (!user || user.password !== credentials.password) {
+        if (!user) {
+          return null
+        }
+
+        // Check if the password matches either plain text or hashed
+        const isMatch = await bcrypt.compare(credentials.password as string, user.password)
+        if (!isMatch && user.password !== credentials.password) {
           return null
         }
 

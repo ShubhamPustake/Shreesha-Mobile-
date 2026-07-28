@@ -170,6 +170,25 @@
   --ring: #f87171;
 }
 
+/* Hide Google Translate Bar Completely */
+iframe.skiptranslate,
+.goog-te-banner-frame,
+#goog-gt-tt {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+body, html {
+  top: 0 !important;
+  position: static !important;
+}
+
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
 @utility glass {
   @apply bg-background/60 backdrop-blur-md border-border/50 border;
 }

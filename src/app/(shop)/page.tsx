@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight, Smartphone, Headphones, Wrench, ShieldCheck, Truck, Clock } from "lucide-react"
+import { ArrowRight, Smartphone, Headphones, Wrench, ShieldCheck, Truck, Zap, Star } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -140,7 +140,7 @@ export default function Home() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-20 bg-primary text-primary-foreground">
+      <section className="py-20 bg-black text-white">
         <div className="container px-4 md:px-6 mx-auto">
           <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Why Choose Shreesha Mobile?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -149,22 +149,111 @@ export default function Home() {
                 <ShieldCheck className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Genuine Products</h3>
-              <p className="text-primary-foreground/80">100% authentic products with brand warranty and guaranteed quality.</p>
+              <p className="text-white/80">100% authentic products with brand warranty and guaranteed quality.</p>
             </div>
             <div className="flex flex-col items-center p-6 glass-panel border-white/20 bg-white/5 rounded-2xl">
               <div className="h-16 w-16 rounded-full bg-white/20 flex items-center justify-center mb-6">
                 <Wrench className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Expert Technicians</h3>
-              <p className="text-primary-foreground/80">Certified professionals handling your device with utmost care and precision.</p>
+              <p className="text-white/80">Certified professionals handling your device with utmost care and precision.</p>
             </div>
             <div className="flex flex-col items-center p-6 glass-panel border-white/20 bg-white/5 rounded-2xl">
               <div className="h-16 w-16 rounded-full bg-white/20 flex items-center justify-center mb-6">
-                <Truck className="h-8 w-8" />
+                <Zap className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Pickup & Drop</h3>
-              <p className="text-primary-foreground/80">Convenient doorstep pickup and delivery for your repair services.</p>
+              <h3 className="text-xl font-semibold mb-3">Lightning Fast Repairs</h3>
+              <p className="text-white/80">Most repairs are completed within 24 hours to get you back connected quickly.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Customer Reviews */}
+      <section className="py-20 bg-background/50">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold tracking-tight mb-4">What Our Customers Say</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Don't just take our word for it. Here's what some of our valued customers have to say about their experience with Shreesha Mobile.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Review 1 */}
+            <Card className="glass-panel border-border/50">
+              <CardContent className="p-6">
+                <div className="flex gap-1 mb-4 text-yellow-500">
+                  <Star className="w-5 h-5 fill-current" />
+                  <Star className="w-5 h-5 fill-current" />
+                  <Star className="w-5 h-5 fill-current" />
+                  <Star className="w-5 h-5 fill-current" />
+                  <Star className="w-5 h-5 fill-current" />
+                </div>
+                <p className="italic text-muted-foreground mb-6 line-clamp-4">
+                  "Absolutely brilliant service! My phone screen was completely shattered and they replaced it within a few hours. The pricing was completely transparent and the staff were incredibly helpful. Highly recommend Shreesha Mobile!"
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary">
+                    AR
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-sm">Aditya Rao</h4>
+                    <p className="text-xs text-muted-foreground">Screen Replacement</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Review 2 */}
+            <Card className="glass-panel border-border/50">
+              <CardContent className="p-6">
+                <div className="flex gap-1 mb-4 text-yellow-500">
+                  <Star className="w-5 h-5 fill-current" />
+                  <Star className="w-5 h-5 fill-current" />
+                  <Star className="w-5 h-5 fill-current" />
+                  <Star className="w-5 h-5 fill-current" />
+                  <Star className="w-5 h-5 fill-current" />
+                </div>
+                <p className="italic text-muted-foreground mb-6 line-clamp-4">
+                  "I was looking for genuine parts to upgrade my older model smartphone and Shreesha Mobile had exactly what I needed. The whole process was seamless and the part works perfectly. Great inventory!"
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary">
+                    SM
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-sm">Sneha Mishra</h4>
+                    <p className="text-xs text-muted-foreground">Parts Purchase</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Review 3 */}
+            <Card className="glass-panel border-border/50">
+              <CardContent className="p-6">
+                <div className="flex gap-1 mb-4 text-yellow-500">
+                  <Star className="w-5 h-5 fill-current" />
+                  <Star className="w-5 h-5 fill-current" />
+                  <Star className="w-5 h-5 fill-current" />
+                  <Star className="w-5 h-5 fill-current" />
+                  <Star className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <p className="italic text-muted-foreground mb-6 line-clamp-4">
+                  "The battery on my phone was dying too fast, so I brought it in. The expert technicians quickly diagnosed the issue and replaced the battery. The device feels like it's brand new again."
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary">
+                    VK
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-sm">Varun Kumar</h4>
+                    <p className="text-xs text-muted-foreground">Battery Replacement</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

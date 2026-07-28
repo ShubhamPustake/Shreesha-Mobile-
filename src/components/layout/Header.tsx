@@ -14,9 +14,22 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { CartSheet } from "@/components/shared/CartSheet"
 import { ThemeToggle } from "@/components/shared/ThemeToggle"
+import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher"
 import { signOut } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 export function Header({ session }: { session?: any }) {
+  const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`)
+    }
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/20 bg-background shadow-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -36,9 +49,9 @@ export function Header({ session }: { session?: any }) {
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold">
           {[
-            { name: "Category", href: "/category" },
             { name: "Mobiles", href: "/mobiles" },
             { name: "Accessories", href: "/accessories" },
+            { name: "Spare Parts", href: "/parts" },
             { name: "Book Repair", href: "/repairs" },
             { name: "Track Repair", href: "/track" },
             { name: "Contact Us", href: "/contact" },
@@ -51,14 +64,16 @@ export function Header({ session }: { session?: any }) {
         </nav>
 
         {/* Search Bar - Desktop */}
-        <div className="hidden lg:flex items-center relative w-full max-w-sm ml-4 group">
+        <form onSubmit={handleSearch} className="hidden lg:flex items-center relative w-full max-w-sm ml-4 group">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors duration-300" />
           <Input 
             type="search" 
             placeholder="Search products..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 h-10 rounded-full bg-secondary/60 border-transparent focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:bg-background transition-all shadow-inner" 
           />
-        </div>
+        </form>
 
         {/* Icons */}
         <div className="flex items-center gap-2">
@@ -97,6 +112,7 @@ export function Header({ session }: { session?: any }) {
             </DropdownMenu>
           )}
 
+          <LanguageSwitcher />
           <ThemeToggle />
           <CartSheet />
 
@@ -108,9 +124,9 @@ export function Header({ session }: { session?: any }) {
             <SheetContent side="left" className="glass-panel w-[300px]">
               <nav className="flex flex-col gap-4 mt-8">
                 <Link href="/" className="text-lg font-medium">Home</Link>
-                <Link href="/category" className="text-lg font-medium">Category</Link>
                 <Link href="/mobiles" className="text-lg font-medium">Mobiles</Link>
                 <Link href="/accessories" className="text-lg font-medium">Accessories</Link>
+                <Link href="/parts" className="text-lg font-medium">Spare Parts</Link>
                 <Link href="/repairs" className="text-lg font-medium">Book Repair</Link>
                 <Link href="/track" className="text-lg font-medium">Track Repair</Link>
                 <Link href="/contact" className="text-lg font-medium">Contact Us</Link>

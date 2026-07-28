@@ -39,7 +39,7 @@ export function Footer() {
                 <TwitterIcon className="h-5 w-5" />
                 <span className="sr-only">Twitter</span>
               </Link>
-              <Link href="#" className="hover:text-primary transition-colors hover:scale-110 transform duration-200">
+              <Link href="https://www.instagram.com/shreeshamob19?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors hover:scale-110 transform duration-200">
                 <InstagramIcon className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
               </Link>
@@ -68,15 +68,15 @@ export function Footer() {
             <ul className="space-y-4 text-sm text-muted-foreground">
               <li className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-primary shrink-0" />
-                <span>123 Tech Street, Silicon Valley, IT Park, Mumbai - 400001, India</span>
+                <span>Navi peth Mayani - 415102, Maharashtra, India</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-primary shrink-0" />
-                <span>+91 98765 43210</span>
+                <span>+91 7773922423</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-primary shrink-0" />
-                <span>support@shreeshamobile.com</span>
+                <span>shreeshamobile@gmail.com</span>
               </li>
             </ul>
           </div>

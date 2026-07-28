@@ -1,5 +1,5 @@
 "use client"
-
+import * as React from "react"
 import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -15,7 +15,13 @@ import Link from "next/link"
 
 export function CartSheet() {
   const { items, removeItem, updateQuantity, getTotal, getItemCount } = useCartStore()
-  const itemCount = getItemCount()
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const itemCount = mounted ? getItemCount() : 0
 
   return (
     <Sheet>

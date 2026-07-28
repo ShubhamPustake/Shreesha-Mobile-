@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -25,6 +26,7 @@ model User {
   repairs        Repair[]  @relation("CustomerRepairs")
   handledRepairs Repair[]  @relation("TechnicianRepairs")
   addresses      Address[]
+  feedbacks      Feedback[]
 }
 
 model Account {
@@ -188,4 +190,15 @@ model OrderItem {
 
   order          Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productVariant ProductVariant @relation(fields: [productVariantId], references: [id])
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  userId    String
+  rating    Int      @default(5)
+  comment   String
+  status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
