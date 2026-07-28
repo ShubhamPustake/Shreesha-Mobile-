@@ -31,16 +31,16 @@ export function Header({ session }: { session?: any }) {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/20 bg-background shadow-sm">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full border-b border-border/10 bg-background/60 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.03)] transition-all duration-300">
+      <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         
         {/* Logo */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-8 h-8 md:w-10 md:h-10 overflow-hidden rounded-xl shadow-lg shadow-primary/20 transition-transform duration-300 group-hover:scale-110">
+            <div className="relative w-10 h-10 md:w-12 md:h-12 overflow-hidden rounded-xl shadow-lg shadow-primary/20 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
               <Image src="/logo.png" alt="Shreesha Mobile Logo" fill className="object-cover" />
             </div>
-            <span className="font-extrabold text-2xl tracking-tighter bg-gradient-to-r from-primary to-rose-500 bg-clip-text text-transparent">
+            <span className="font-extrabold text-2xl md:text-3xl tracking-tighter bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent transition-opacity group-hover:opacity-90">
               Shreesha<span className="text-foreground">Mobile</span>
             </span>
           </Link>
@@ -58,20 +58,20 @@ export function Header({ session }: { session?: any }) {
           ].map((item) => (
             <Link key={item.name} href={item.href} className="relative group text-muted-foreground hover:text-foreground transition-colors py-2">
               {item.name}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full rounded-full"></span>
+              <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-primary to-accent transition-all duration-300 group-hover:w-full rounded-full"></span>
             </Link>
           ))}
         </nav>
 
         {/* Search Bar - Desktop */}
-        <form onSubmit={handleSearch} className="hidden lg:flex items-center relative w-full max-w-sm ml-4 group">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors duration-300" />
+        <form onSubmit={handleSearch} className="hidden lg:flex items-center relative w-full max-w-xs xl:max-w-md ml-4 group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors duration-300" />
           <Input 
             type="search" 
-            placeholder="Search products..." 
+            placeholder="Search devices..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-10 rounded-full bg-secondary/60 border-transparent focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:bg-background transition-all shadow-inner" 
+            className="pl-11 h-11 w-full rounded-full bg-secondary/40 border-transparent focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:bg-secondary/80 hover:bg-secondary/60 transition-all shadow-none" 
           />
         </form>
 
