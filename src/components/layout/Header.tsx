@@ -97,11 +97,11 @@ export function Header({ session }: { session?: any }) {
                 <DropdownMenuItem className="font-medium text-primary mb-1">
                   Hi, {session.user?.name?.split(' ')[0] || "User"}
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link href="/dashboard" className="w-full cursor-pointer">My Account</Link>
                 </DropdownMenuItem>
                 {session.user?.role !== "CUSTOMER" && (
-                  <DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link href="/admin" className="w-full cursor-pointer">Admin Portal</Link>
                   </DropdownMenuItem>
                 )}
