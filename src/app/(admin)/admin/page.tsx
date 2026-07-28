@@ -8,6 +8,8 @@ import { AdminMetrics } from "@/components/admin/AdminMetrics"
 
 const prisma = new PrismaClient()
 
+export const dynamic = "force-dynamic"
+
 export default async function AdminDashboardPage() {
 
   const recentOrders = await prisma.order.findMany({

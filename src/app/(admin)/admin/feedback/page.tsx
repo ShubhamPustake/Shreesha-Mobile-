@@ -1,6 +1,8 @@
 import { getAllFeedback } from "@/actions/feedback"
 import { FeedbackClient } from "@/components/admin/FeedbackClient"
 
+export const dynamic = "force-dynamic"
+
 export default async function AdminFeedbackPage() {
   const result = await getAllFeedback()
 

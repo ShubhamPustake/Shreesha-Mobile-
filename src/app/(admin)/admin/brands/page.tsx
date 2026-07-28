@@ -5,6 +5,8 @@ import { BrandsClient } from "@/components/admin/BrandsClient"
 
 const prisma = new PrismaClient()
 
+export const dynamic = "force-dynamic"
+
 export default async function BrandsPage() {
   const brands = await prisma.brand.findMany({
     orderBy: { createdAt: 'desc' },

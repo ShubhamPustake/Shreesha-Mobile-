@@ -5,6 +5,8 @@ import { CategoriesClient } from "@/components/admin/CategoriesClient"
 
 const prisma = new PrismaClient()
 
+export const dynamic = "force-dynamic"
+
 export default async function CategoriesPage() {
   const categories = await prisma.category.findMany({
     orderBy: {
