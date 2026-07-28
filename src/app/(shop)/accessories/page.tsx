@@ -213,7 +213,7 @@ export default function AccessoriesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredProducts.map((product) => (
               <div key={product.id} className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 group flex flex-col">
-                <div className="relative aspect-square p-6 bg-white dark:bg-white/5 flex items-center justify-center overflow-hidden">
+                <div className="relative aspect-square p-6 bg-card flex items-center justify-center overflow-hidden">
                   {product.badge && (
                     <Badge className="absolute top-3 left-3 z-10 bg-rose-500 hover:bg-rose-600 text-white border-none">
                       {product.badge}

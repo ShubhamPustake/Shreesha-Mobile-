@@ -75,7 +75,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 pb-20">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-white dark:bg-neutral-900 pt-16 pb-32 border-b dark:border-neutral-800">
+      <div className="relative overflow-hidden bg-card pt-16 pb-32 border-b dark:border-neutral-800">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
         <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-blue-500 opacity-20 blur-[100px]"></div>
         
@@ -120,7 +120,7 @@ export default function ContactPage() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 + (index * 0.1) }}
-                className="bg-white dark:bg-neutral-900 p-6 rounded-2xl shadow-sm border dark:border-neutral-800 flex items-start gap-4 hover:shadow-md transition-shadow"
+                className="bg-card p-6 rounded-2xl shadow-sm border dark:border-neutral-800 flex items-start gap-4 hover:shadow-md transition-shadow"
               >
                 <div className={`p-3 rounded-xl ${item.bg} ${item.color}`}>
                   <item.icon className="h-6 w-6" />
@@ -141,7 +141,7 @@ export default function ContactPage() {
               transition={{ duration: 0.5, delay: 0.7 }}
               className="bg-gradient-to-tr from-yellow-400 via-rose-500 to-purple-600 p-[1px] rounded-2xl block hover:scale-[1.02] transition-transform"
             >
-              <div className="bg-white dark:bg-neutral-900 p-6 rounded-[15px] flex items-center justify-between group">
+              <div className="bg-card p-6 rounded-[15px] flex items-center justify-between group">
                 <div className="flex items-center gap-4">
                   <div className="p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-rose-500 group-hover:scale-110 transition-transform">
                     <InstagramIcon className="h-6 w-6" />
@@ -163,7 +163,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="lg:col-span-2 bg-white dark:bg-neutral-900 p-8 rounded-3xl shadow-lg border dark:border-neutral-800"
+            className="lg:col-span-2 bg-card p-8 rounded-3xl shadow-lg border dark:border-neutral-800"
           >
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">Send us a Message</h2>

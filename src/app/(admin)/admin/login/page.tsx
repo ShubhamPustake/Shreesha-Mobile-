@@ -31,7 +31,7 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
-      <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 p-8 shadow-2xl relative overflow-hidden">
+      <div className="w-full max-w-md bg-card rounded-2xl border border-slate-200 p-8 shadow-2xl relative overflow-hidden">
         {/* Decorative Top Bar */}
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-600 to-indigo-600" />
 

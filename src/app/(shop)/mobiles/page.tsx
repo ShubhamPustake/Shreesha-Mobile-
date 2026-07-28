@@ -120,7 +120,7 @@ export default function MobilesPage() {
   return (
     <div className="bg-[#f2f4f8] min-h-screen pb-12">
       {/* Amazon-like Top Bar */}
-      <div className="bg-white border-b border-border shadow-sm px-4 py-3 mb-6">
+      <div className="bg-card border-b border-border shadow-sm px-4 py-3 mb-6">
         <div className="container mx-auto">
           <div className="flex items-center text-sm text-muted-foreground">
             <span className="font-semibold text-foreground">1-{filteredProducts.length} of over 10,000 results for</span>
@@ -131,7 +131,7 @@ export default function MobilesPage() {
 
       <div className="container mx-auto px-4 flex flex-col md:flex-row gap-6">
         {/* Amazon-like Left Sidebar */}
-        <aside className="w-full md:w-64 flex-shrink-0 bg-white p-4 rounded-lg shadow-sm border border-border h-fit">
+        <aside className="w-full md:w-64 flex-shrink-0 bg-card p-4 rounded-lg shadow-sm border border-border h-fit">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-lg">Filters</h3>
             {(selectedBrands.length > 0 || selectedRam.length > 0 || selectedPrice !== null) && (
@@ -200,16 +200,16 @@ export default function MobilesPage() {
         {/* Product List View */}
         <div className="flex-1 flex flex-col gap-4">
           {filteredProducts.length === 0 ? (
-            <div className="bg-white p-12 text-center rounded-lg border border-border shadow-sm">
+            <div className="bg-card p-12 text-center rounded-lg border border-border shadow-sm">
               <h3 className="text-xl font-semibold mb-2">No results</h3>
               <p className="text-muted-foreground">Try checking your spelling or use more general terms.</p>
             </div>
           ) : (
             filteredProducts.map(product => (
-              <div key={product.id} className="bg-white rounded-lg border border-border shadow-sm overflow-hidden flex flex-col sm:flex-row hover:shadow-md transition-shadow">
+              <div key={product.id} className="bg-card rounded-lg border border-border shadow-sm overflow-hidden flex flex-col sm:flex-row hover:shadow-md transition-shadow">
                 
                 {/* Image Section */}
-                <Link href={`/products/${product.id}`} className="block w-full sm:w-64 h-64 sm:h-auto shrink-0 p-4 bg-white relative flex items-center justify-center border-b sm:border-b-0 sm:border-r border-border hover:opacity-90 transition-opacity">
+                <Link href={`/products/${product.id}`} className="block w-full sm:w-64 h-64 sm:h-auto shrink-0 p-4 bg-card relative flex items-center justify-center border-b sm:border-b-0 sm:border-r border-border hover:opacity-90 transition-opacity">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img 
                     src={product.image} 

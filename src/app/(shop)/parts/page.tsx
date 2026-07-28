@@ -131,7 +131,7 @@ export default function SparePartsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {products.map((product) => (
                     <Card key={product.id} className="overflow-hidden border-border/50 group h-full flex flex-col">
-                      <Link href={`/products/${product.id}`} className="block relative aspect-[4/3] bg-white overflow-hidden p-4">
+                      <Link href={`/products/${product.id}`} className="block relative aspect-[4/3] bg-card overflow-hidden p-4">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img 
                           src={product.image} 
