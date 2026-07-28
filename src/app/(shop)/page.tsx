@@ -6,7 +6,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-import { motion } from "framer-motion"
+import { motion, Variants } from "framer-motion"
 
 const FEATURED_PRODUCTS = [
   { id: "1", name: "iPhone 15 Pro Max", price: 159900, category: "Mobiles", image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?q=80&w=600&auto=format&fit=crop" },
@@ -15,12 +15,12 @@ const FEATURED_PRODUCTS = [
   { id: "4", name: "Apple AirPods Pro (2nd Gen)", price: 24900, category: "Accessories", image: "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?q=80&w=600&auto=format&fit=crop" },
 ]
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
 }
 
-const stagger = {
+const stagger: Variants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.15 } }
 }
