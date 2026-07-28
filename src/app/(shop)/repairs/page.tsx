@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { bookRepair } from "@/actions/repairs"
 
 const repairSchema = z.object({
   brand: z.string().min(1, "Brand is required"),
@@ -51,18 +52,22 @@ export default function RepairBookingPage() {
 
   const serviceType = watch("serviceType")
 
-  const onSubmit = (data: RepairFormValues) => {
+  const onSubmit = async (data: RepairFormValues) => {
     setIsSubmitting(true)
     
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Repair Booking Data:", data)
+    try {
+      const repair = await bookRepair(data)
       toast.success("Repair Booked Successfully!", {
-        description: "Your Tracking ID is SRX-8924. We will contact you shortly.",
+        description: `Your Tracking ID is ${repair.id.slice(-6).toUpperCase()}. We will contact you shortly.`,
       })
+      router.push(`/track?id=${repair.id}`)
+    } catch (error: any) {
+      toast.error("Failed to book repair", {
+        description: error.message || "An error occurred."
+      })
+    } finally {
       setIsSubmitting(false)
-      router.push("/track?id=SRX-8924")
-    }, 1500)
+    }
   }
 
   return (

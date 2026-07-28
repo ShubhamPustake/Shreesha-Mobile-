@@ -97,12 +97,12 @@ export function Header({ session }: { session?: any }) {
                 <DropdownMenuItem className="font-medium text-primary mb-1">
                   Hi, {session.user?.name?.split(' ')[0] || "User"}
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard" className="w-full cursor-pointer">My Account</Link>
+                <DropdownMenuItem render={<Link href="/dashboard" className="w-full cursor-pointer" />}>
+                  My Account
                 </DropdownMenuItem>
                 {session.user?.role !== "CUSTOMER" && (
-                  <DropdownMenuItem asChild>
-                    <Link href="/admin" className="w-full cursor-pointer">Admin Portal</Link>
+                  <DropdownMenuItem render={<Link href="/admin" className="w-full cursor-pointer" />}>
+                    Admin Portal
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={() => signOut({ callbackUrl: '/' })} className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer">

@@ -20,6 +20,7 @@ type RepairJob = {
   status: string;
   serviceType: string;
   location: string;
+  customerPhone?: string;
 }
 
 const STATUS_CONFIG: Record<string, { label: string, color: string }> = {
@@ -53,7 +54,8 @@ export default function RepairsDashboard() {
   const filteredJobs = jobs.filter(job => 
     job.id.toLowerCase().includes(search.toLowerCase()) || 
     job.customer.toLowerCase().includes(search.toLowerCase()) ||
-    job.device.toLowerCase().includes(search.toLowerCase())
+    job.device.toLowerCase().includes(search.toLowerCase()) ||
+    (job.customerPhone && job.customerPhone.includes(search))
   )
 
   return (

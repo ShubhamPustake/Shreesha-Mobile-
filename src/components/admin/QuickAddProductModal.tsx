@@ -177,6 +177,14 @@ export function QuickAddProductModal({
             <div className="space-y-2">
               <Label htmlFor="q-image">Main Product Image URL *</Label>
               <Input id="q-image" required value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} placeholder="https://example.com/image.jpg" />
+              {formData.image && (
+                <div className="mt-3 w-40 h-40 relative rounded-md overflow-hidden border border-border shadow-sm">
+                  {/* Using standard img to avoid next/image hostname restrictions for random URLs */}
+                  <img src={formData.image} alt="Product Preview" className="object-cover w-full h-full" onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://placehold.co/400x400/f8fafc/94a3b8?text=Invalid+Image+URL'
+                  }} />
+                </div>
+              )}
             </div>
           </div>
 

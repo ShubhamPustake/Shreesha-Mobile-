@@ -7,7 +7,12 @@ export default async function ShopLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await auth()
+  let session = null;
+  try {
+    session = await auth()
+  } catch (e) {
+    console.error("Auth session error:", e)
+  }
 
   return (
     <div className="min-h-screen flex flex-col">

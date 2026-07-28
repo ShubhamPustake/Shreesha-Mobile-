@@ -6,6 +6,8 @@ import { Filter, Star, Truck, RefreshCcw, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
+import { useCartStore } from "@/store/cartStore"
+import { toast } from "sonner"
 
 const MOBILE_PRODUCTS = [
   {
@@ -82,6 +84,22 @@ export default function MobilesPage() {
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [selectedRam, setSelectedRam] = useState<string[]>([])
   const [selectedPrice, setSelectedPrice] = useState<string | null>(null)
+  
+  const addItem = useCartStore((state) => state.addItem)
+
+  const handleAddToCart = (product: any) => {
+    addItem({
+      id: product.id,
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.image,
+    })
+    toast.success("Added to Cart", {
+      description: `${product.name} has been added to your cart.`,
+    })
+  }
   
   const toggleBrand = (brand: string) => {
     setSelectedBrands(prev => 
@@ -265,7 +283,10 @@ export default function MobilesPage() {
                       <span>FREE delivery by <strong>Tomorrow, 11 AM</strong></span>
                     </div>
 
-                    <Button className="bg-[#FFD814] hover:bg-[#F7CA00] text-black border border-[#FCD200] shadow-sm rounded-full px-6">
+                    <Button 
+                      className="bg-[#FFD814] hover:bg-[#F7CA00] text-black border border-[#FCD200] shadow-sm rounded-full px-6"
+                      onClick={() => handleAddToCart(product)}
+                    >
                       <ShoppingCart className="w-4 h-4 mr-2" /> Add to cart
                     </Button>
                   </div>

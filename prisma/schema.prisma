@@ -183,13 +183,15 @@ model Order {
 model OrderItem {
   id               String   @id @default(cuid())
   orderId          String
-  productVariantId String
+  productVariantId String?
+  productName      String?
+  image            String?
   quantity         Int
   price            Float
   createdAt        DateTime @default(now())
 
-  order          Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productVariant ProductVariant @relation(fields: [productVariantId], references: [id])
+  order          Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productVariant ProductVariant? @relation(fields: [productVariantId], references: [id])
 }
 
 model Feedback {

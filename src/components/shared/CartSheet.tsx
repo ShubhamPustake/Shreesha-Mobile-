@@ -9,13 +9,16 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetFooter,
+  SheetClose,
 } from "@/components/ui/sheet"
 import { useCartStore } from "@/store/cartStore"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export function CartSheet() {
   const { items, removeItem, updateQuantity, getTotal, getItemCount } = useCartStore()
   const [mounted, setMounted] = React.useState(false)
+  const router = useRouter()
 
   React.useEffect(() => {
     setMounted(true)
@@ -94,9 +97,16 @@ export function CartSheet() {
               <span>Total</span>
               <span>₹{getTotal().toLocaleString()}</span>
             </div>
-            <Link href="/checkout" className={buttonVariants({ size: "lg", className: "w-full" })}>
+            <SheetClose 
+              render={
+                <button 
+                  onClick={() => router.push('/checkout')} 
+                  className={buttonVariants({ size: "lg", className: "w-full" })} 
+                />
+              }
+            >
               Proceed to Checkout
-            </Link>
+            </SheetClose>
           </SheetFooter>
         )}
       </SheetContent>

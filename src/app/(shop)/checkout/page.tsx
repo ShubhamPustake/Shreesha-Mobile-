@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator"
 import { useCartStore } from "@/store/cartStore"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { createOrder } from "@/actions/orders"
 
 const checkoutSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
@@ -30,6 +31,7 @@ export default function CheckoutPage() {
   const { items, getTotal, clearCart } = useCartStore()
   const router = useRouter()
   const [mounted, setMounted] = useState(false)
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false)
 
   const { register, handleSubmit, formState: { errors }, watch } = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutSchema),
@@ -42,16 +44,24 @@ export default function CheckoutPage() {
     setMounted(true)
   }, [])
 
-  const onSubmit = (data: CheckoutFormValues) => {
-    // In a real app, this would process payment with Razorpay/Stripe
-    console.log("Order Data:", data, "Items:", items)
-    
-    toast.success("Order Placed Successfully!", {
-      description: "Thank you for shopping with Shreesha Mobile.",
-    })
-    
-    clearCart()
-    router.push("/")
+  const onSubmit = async (data: CheckoutFormValues) => {
+    setIsPlacingOrder(true)
+    try {
+      await createOrder(data, items, total)
+      
+      toast.success("Order Placed Successfully!", {
+        description: "Thank you for shopping with Shreesha Mobile.",
+      })
+      
+      clearCart()
+      router.push("/dashboard")
+    } catch (error: any) {
+      toast.error("Failed to place order", {
+        description: error.message || "Please make sure you are logged in."
+      })
+    } finally {
+      setIsPlacingOrder(false)
+    }
   }
 
   if (!mounted) return null // Prevent hydration mismatch
@@ -201,8 +211,8 @@ export default function CheckoutPage() {
                   <span className="text-primary">₹{total.toLocaleString()}</span>
                 </div>
 
-                <Button type="submit" form="checkout-form" size="lg" className="w-full text-md">
-                  Place Order
+                <Button type="submit" form="checkout-form" size="lg" className="w-full text-md" disabled={isPlacingOrder}>
+                  {isPlacingOrder ? "Processing..." : "Place Order"}
                 </Button>
               </CardContent>
             </Card>
