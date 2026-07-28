@@ -3,10 +3,8 @@ import { IndianRupee, Wrench, Package, TrendingUp, Users, ArrowUpRight, ArrowDow
 import { Button, buttonVariants } from "@/components/ui/button"
 import Link from "next/link"
 import { logoutAction } from "@/actions/auth"
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "@/lib/prisma"
 import { AdminMetrics } from "@/components/admin/AdminMetrics"
-
-const prisma = new PrismaClient()
 
 export const dynamic = "force-dynamic"
 

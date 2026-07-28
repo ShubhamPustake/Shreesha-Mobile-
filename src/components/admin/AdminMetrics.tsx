@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "@/lib/prisma"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { IndianRupee, Wrench, Package, Users } from "lucide-react"
-
-const prisma = new PrismaClient()
 
 export async function AdminMetrics() {
   // Fetch real data from DB
