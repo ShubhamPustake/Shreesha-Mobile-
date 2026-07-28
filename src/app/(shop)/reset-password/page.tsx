@@ -90,7 +90,7 @@ function ResetPasswordForm() {
           <PasswordInput 
             name="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             className="pl-10" 
             required 
             minLength={6}
@@ -104,7 +104,7 @@ function ResetPasswordForm() {
           <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
           <PasswordInput 
             value={confirmPassword}
-            onChange={e => setConfirmPassword(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
             className="pl-10" 
             required 
             minLength={6}

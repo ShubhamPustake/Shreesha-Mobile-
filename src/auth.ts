@@ -26,7 +26,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
 
         // Check if the password matches either plain text or hashed
-        const isMatch = await bcrypt.compare(credentials.password as string, user.password)
+        const isMatch = user.password ? await bcrypt.compare(credentials.password as string, user.password) : false
         if (!isMatch && user.password !== credentials.password) {
           return null
         }

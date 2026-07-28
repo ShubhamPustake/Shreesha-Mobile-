@@ -187,7 +187,7 @@ export default function RepairBookingPage() {
               {errors.preferredDate && <p className="text-destructive text-xs">{errors.preferredDate.message}</p>}
             </div>
             
-            {(serviceType === 'pickup' || serviceType === 'doorstep') && (
+            {serviceType === 'pickup' && (
               <div className="space-y-2 md:col-span-2">
                 <Separator className="my-2" />
                 <label className="text-sm font-medium">Full Address *</label>

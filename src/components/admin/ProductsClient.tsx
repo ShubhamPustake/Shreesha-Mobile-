@@ -172,7 +172,7 @@ export function ProductsClient({
               />
             </div>
             
-            <Select value={filterType} onValueChange={setFilterType}>
+            <Select value={filterType} onValueChange={(val: string | null) => setFilterType(val || "ALL")}>
               <SelectTrigger className="w-[140px] bg-background/50">
                 <SelectValue placeholder="All Types" />
               </SelectTrigger>
@@ -184,7 +184,7 @@ export function ProductsClient({
               </SelectContent>
             </Select>
 
-            <Select value={filterBrand} onValueChange={setFilterBrand}>
+            <Select value={filterBrand} onValueChange={(val: string | null) => setFilterBrand(val || "ALL")}>
               <SelectTrigger className="w-[140px] bg-background/50">
                 <SelectValue placeholder="All Brands" />
               </SelectTrigger>
@@ -196,7 +196,7 @@ export function ProductsClient({
               </SelectContent>
             </Select>
 
-            <Select value={filterCategory} onValueChange={setFilterCategory}>
+            <Select value={filterCategory} onValueChange={(val: string | null) => setFilterCategory(val || "ALL")}>
               <SelectTrigger className="w-[140px] bg-background/50">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>

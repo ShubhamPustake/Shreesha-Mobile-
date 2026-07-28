@@ -119,10 +119,8 @@ export function QuickAddProductModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto">
-          <Plus className="h-4 w-4" /> Add Product
-        </Button>
+      <DialogTrigger render={<Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto" />}>
+        <Plus className="h-4 w-4" /> Add Product
       </DialogTrigger>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>

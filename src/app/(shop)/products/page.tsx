@@ -96,7 +96,7 @@ function ProductsContent() {
             </div>
             <Separator className="mb-4" />
             
-            <Accordion type="multiple" defaultValue={["categories", "brands", "price"]} className="w-full">
+            <Accordion className="w-full">
               <AccordionItem value="categories" className="border-b-0">
                 <AccordionTrigger className="hover:no-underline py-3">Categories</AccordionTrigger>
                 <AccordionContent>
