@@ -19,6 +19,7 @@ const repairSchema = z.object({
   issue: z.string().min(10, "Please describe the issue in at least 10 characters"),
   imei: z.string().optional(),
   passcode: z.string().optional(),
+  photo: z.any().optional(),
   serviceType: z.enum(["store", "pickup"]),
   fullName: z.string().min(2, "Full name is required"),
   phone: z.string().min(10, "Valid phone number required"),
@@ -124,6 +125,13 @@ export default function RepairBookingPage() {
               <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
                 <ShieldCheck className="h-3 w-3" /> Encrypted & secure
               </p>
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-sm font-medium flex items-center gap-2">
+                Upload Device Photo (Optional)
+              </label>
+              <Input type="file" accept="image/*" {...register("photo")} className="cursor-pointer file:text-primary file:bg-primary/10 file:border-0 file:mr-4 file:px-4 file:py-1 file:rounded-md hover:file:bg-primary/20 transition-all" />
+              <p className="text-xs text-muted-foreground">Upload a photo showing the device's current condition or damage.</p>
             </div>
           </CardContent>
         </Card>
