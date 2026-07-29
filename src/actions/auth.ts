@@ -12,7 +12,8 @@ export async function loginAction(formData: FormData, redirectTo: string = "/") 
         case "CredentialsSignin":
           return { error: "Invalid credentials." }
         default:
-          return { error: `Auth Error [${error.type}]: ${error.message}` }
+          const causeMsg = error.cause?.err?.message || error.cause?.message || String(error.cause) || "Unknown internal error";
+          return { error: `Auth Error [${error.type}]: ${causeMsg}` }
       }
     }
     throw error
