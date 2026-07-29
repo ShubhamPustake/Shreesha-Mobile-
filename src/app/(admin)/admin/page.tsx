@@ -25,7 +25,7 @@ export default async function AdminDashboardPage() {
     ...recentOrders.map(o => ({
       time: o.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       title: "Order Placed",
-      desc: o.items.map(i => i.productVariant.name).join(", "),
+      desc: o.items.map(i => i.productVariant?.name || i.productName || "Product").join(", "),
       amount: `₹${o.totalAmount.toLocaleString('en-IN')}`,
       date: o.createdAt
     })),
