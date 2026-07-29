@@ -97,11 +97,11 @@ export function Header({ session }: { session?: any }) {
                 <DropdownMenuItem className="font-medium text-primary mb-1">
                   Hi, {session.user?.name?.split(' ')[0] || "User"}
                 </DropdownMenuItem>
-                <DropdownMenuItem render={<Link href="/dashboard" className="w-full cursor-pointer" />}>
+                <DropdownMenuItem onClick={() => router.push("/dashboard")} className="cursor-pointer">
                   My Account
                 </DropdownMenuItem>
                 {session.user?.role !== "CUSTOMER" && (
-                  <DropdownMenuItem render={<Link href="/admin" className="w-full cursor-pointer" />}>
+                  <DropdownMenuItem onClick={() => router.push("/admin")} className="cursor-pointer">
                     Admin Portal
                   </DropdownMenuItem>
                 )}
