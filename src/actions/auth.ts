@@ -12,7 +12,7 @@ export async function loginAction(formData: FormData, redirectTo: string = "/") 
         case "CredentialsSignin":
           return { error: "Invalid credentials." }
         default:
-          return { error: "Something went wrong." }
+          return { error: `Auth Error [${error.type}]: ${error.message}` }
       }
     }
     throw error
